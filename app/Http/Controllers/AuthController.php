@@ -40,26 +40,23 @@ class AuthController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]);
-        $data = $request->all();
+        $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
+        if (Auth::attempt($credentials,$remember)) {
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withDelete('User not found!');
-        }
-        // Remmber me setting cookies
-        if (isset($data['remember']) && !empty($data['remember'])) {
-            setcookie('email', $data['email'], time() + 3600);
-            setcookie('password', $data['password'], time() + 3600);
+            // Remmber me setting cookies
+        if ($request->remember) {
+            setcookie('email', $credentials['email'], time() + 60 * 60 * 24 * 365);
+            setcookie('password', $credentials['password'], time() + 60 * 60 * 24 * 365);
         } else {
-            setcookie('email', '');
-            setcookie('password', '');
+            setcookie('email', $credentials['email'], time() - 3600);
+            setcookie('password', $credentials['password'], time() - 3600);
         }
 
-        Auth::login($user);
-
-        return redirect()->route('student.index');
+            return redirect()->route('student.index');
+        }
+        
+        return redirect()->route('loginpage');
     }
     public function logout(Request $request)
     {

@@ -15,9 +15,9 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::group(["prefix" => "/"], function () {
     Route::group(["middleware" => "guest"], function () {
         Route::get('loginpage', [AuthController::class, 'loginpage'])->name('loginpage');
@@ -28,5 +28,6 @@ Route::group(["prefix" => "/"], function () {
     Route::group(["middleware" => "auth"], function () {
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
         Route::resource('student', DataController::class);
+        Route::get('/', function () { return view('welcome'); });
     });
 });

@@ -25,6 +25,17 @@
 </head>
 
 <body>
+    @php
+    if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
+        $email = $_COOKIE['email'];
+        $password = $_COOKIE['password'];
+        $remember = "checked='checked'";
+    } else {
+        $email = '';
+        $password = '';
+        $remember = '';
+    }
+@endphp
     <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -35,7 +46,7 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Enter Email"
-                                @if (isset($_COOKIE['email'])) value="{{ $_COOKIE['email'] }}" @endif>
+                            value="{{ $email }}">
                         </div>
                         @if ($errors->has('email'))
                             <p class="text-danger">{{ $errors->first('email') }}</p>
@@ -44,9 +55,7 @@
                             <label for="exampleInputPassword1" class="form-label">Password</label>
                             <div class="position-relative">
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" id="exampleInputPassword1" name="password" placeholder="Enter Password"
-                                    @if (isset($_COOKIE['password'])) 
-                                    value="{{ $_COOKIE['password'] }}" 
-                                    @endif>
+                                value="{{ $password }}">
                                 <i class="bi bi-eye-slash eye-icon" id="togglePassword"></i>
                             </div>
                         </div>
@@ -54,9 +63,9 @@
                             <p class="text-danger">{{ $errors->first('password') }}</p>
                         @endif
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                            <label class="form-check-label" id="remember" name="remember" for="exampleCheck1"
-                                @if (isset($_COOKIE['email'])) checked @endif>Remember Me</label>
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1"name="remember" 
+                            {{ $remember }}>
+                            <label class="form-check-label" id="remember" for="exampleCheck1">Remember Me</label>
                         </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                         <div class="mt-2">
